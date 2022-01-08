@@ -1,0 +1,34 @@
+version: "3.9"
+services:
+  db:
+    container_name: postgres
+    image: postgres
+    restart: always
+    environment:
+      TZ: Asia/Seoul
+      POSTGRES_HOST_AUTH_METHOD: "trust"
+      POSTGRES_USERNAME: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+    ports:
+      - 5432:5432
+    volumes:
+      - ./vol:/var/lib/postgresql/data
+    networks:
+      - pg_pgadmin_network
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      - TZ=Asia/Seoul
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=admin
+    ports:
+      - 8088:80
+    networks:
+      - pg_pgadmin_network
+
+networks:
+   pg_pgadmin_network:
+     driver: bridge
