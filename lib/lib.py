@@ -15,6 +15,7 @@ def errorLoggingDecorator(f):
 
     return Wrapper
 
+@errorLoggingDecorator
 def transToDate(date):
     #### 2020-00-00 00:00 ####
 
@@ -29,5 +30,6 @@ def transToDate(date):
 
     return datetime(*list(map(int,[year,month,day,hour,min])))
 
+@errorLoggingDecorator
 def getCurPath():
     return abspath(getcwd())

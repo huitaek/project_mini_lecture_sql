@@ -37,7 +37,8 @@ class DB:
             
         for k, v in query.items():
             self.cursor.execute(v)
-            
+    
+    @errorLoggingDecorator 
     def executeQueryHasReturn(self,query):
         if type(query) != dict:
             logging.error('Query must be DICT !!')

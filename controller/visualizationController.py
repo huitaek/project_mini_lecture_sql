@@ -4,6 +4,8 @@ import pandas as pd
 from matplotlib import pyplot as plt
 from matplotlib import font_manager,rc
 
+from lib.lib import errorLoggingDecorator
+
 # --  matplotlib setting
 
 # ---- font
@@ -11,6 +13,7 @@ font_path = "C:/Windows/Fonts/malgun.ttf"
 font = font_manager.FontProperties(fname=font_path).get_name()
 rc('font', family=font)
 
+@errorLoggingDecorator
 def scenarioVisualizingRoadTypeL(db):
     res,cols = db.executeQueryHasReturn({'q':"""select
        rtl.road_form_l as "도로형태",
@@ -33,6 +36,7 @@ from accident a
     df.plot(kind='bar',x='도로형태',y ='총 부상자 수')
     plt.show()
 
+@errorLoggingDecorator
 def scenarioVisualizingRoadType(db):
     res,cols = db.executeQueryHasReturn({'q':"""select
        rt.road_form as "도로형태",

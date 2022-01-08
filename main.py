@@ -19,6 +19,7 @@ def scenarioexecuteInsertCSVData(db, switch):
         logging.warning('no matched switch number!!')
         return False
 
+@errorLoggingDecorator
 def scenarioSetDbTables(db):
     # Database connection
     
