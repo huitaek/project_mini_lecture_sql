@@ -1,3 +1,5 @@
+## query must be dictionary !!
+
 init_query = """drop table if exists accident, assaults, damageds,accident_type, accident_type_l, involved_types, casualty, involved, road_type, road_type_l, violations, weather, location;
 """
 
