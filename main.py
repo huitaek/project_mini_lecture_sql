@@ -2,7 +2,7 @@ import logging
 from classes import pg
 from lib import consts, queries
 from lib.lib import errorLoggingDecorator
-from controller.dataController import InsertToDbAccidentData, InsertToDbWeatherData, getCsvFileNames, makeCSVFileByTableName
+from controller.dataController import InsertToDbAccidentData, InsertToDbWeatherData, getCsvFileNames
 import controller.visualizationController as vc
 
 logger = logging.getLogger()
@@ -52,7 +52,7 @@ if __name__ == '__main__':
     # set db    
     db = pg.DB()
     db.connectToDB(consts.dbInfo)
-    makeCSVFileByTableName(db,'accident')
+    
     # scenarioSetDbTables(db)
     
     # Analyze and Visualizing

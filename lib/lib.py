@@ -4,7 +4,6 @@ from os import getcwd
 from os.path import abspath
 import traceback
 
-
 def errorLoggingDecorator(f):
     def Wrapper(*args,**kargs):
         try:

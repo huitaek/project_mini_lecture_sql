@@ -7,7 +7,6 @@ from matplotlib import font_manager,rc
 from lib.lib import errorLoggingDecorator
 
 # --  matplotlib setting
-
 # ---- font
 font_path = "C:/Windows/Fonts/malgun.ttf"
 font = font_manager.FontProperties(fname=font_path).get_name()
