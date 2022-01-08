@@ -4,9 +4,7 @@ from controller.dataController import readCSVByPandas, preProcessingWeatherData
 from lib import consts, queries
 from lib.lib import errorLoggingDecorator
 from controller.dataController import getCsvFileNames,insertFromCSVFuncForMatchSQLFormat
-import matplotlib.pyplot as plt
-import pandas as pd
-from matplotlib import font_manager, rc
+import controller.visualizationController as vc
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -40,7 +38,7 @@ def scenarioexecuteInsertCSVData(db, switch):
         logging.warning('no matched switch number!!')
         return False
 
-def scenarioDbTablesInit(db):
+def scenarioSetDbTables(db):
     # Database connection
     
     # clean Database
@@ -65,37 +63,23 @@ def scenarioDbTablesInit(db):
     
     return db
 
+
+
 if __name__ == '__main__':
-    # connect db    
+    # set db    
     db = pg.DB()
     db.connectToDB(consts.dbInfo)
-
-    # set db ----
-    # scenarioDbTablesInit(db)
+    # scenarioSetDbTables(db)
     
-    # ---- Analyze
+    # Analyze and Visualizing
+    # -- contents
     
-    # 한글폰트세팅
-    font_path = "C:/Windows/Fonts/malgun.ttf"
-    font = font_manager.FontProperties(fname=font_path).get_name()
-    rc('font', family=font)
+    # ---- 도로형태(대분류)에 따른 상해 및 사망자 정보
+    vc.scenarioVisualizingRoadTypeL(db)
     
-    # 도로유형에 따른 상해 및 사망자 정보
-    res,cols = db.executeQueryHasReturn({'q':"""select
-       rtl.road_form_l as "도로형태(대)",
-       sum(c.death) as "총 사망자 수",
-       sum(c.slight) as "총 중상자 수",
-       sum(c.injured) as "총 부상자 수",
-       sum(c.slight)+sum(c.wound) as "총 경상자 수"
-from accident a
-         join casualty c on c.accident_id = a.accident_id
-         join road_type_l rtl on a.road_type_l_id = rtl.road_type_l_id
-         join road_type rt on a.road_type_id = rt.road_type_id
-        group by rtl.road_form_l;"""})
-    df = pd.DataFrame(res,columns = cols)
+    # ---- 도로형태(소)에 따른 상해 및 사망자 정보
+    vc.scenarioVisualizingRoadType(db)
     
-    df.plot(kind='bar',x='도로형태(대)',y='총 사망자 수')
-    plt.show()
     
     
     # Database Connection close
