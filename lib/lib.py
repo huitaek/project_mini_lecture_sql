@@ -1,8 +1,8 @@
 import logging
-import psycopg2 as pg2
 from datetime import datetime
-from os import getcwd, listdir
-from os.path import abspath, isfile, join
+from os import getcwd
+from os.path import abspath
+import traceback
 
 
 def errorLoggingDecorator(f):
@@ -10,7 +10,7 @@ def errorLoggingDecorator(f):
         try:
             return f(*args,**kargs)
         except Exception as e:
-            logging.error(e)
+            logging.error(traceback.format_exc())
             return False
 
     return Wrapper

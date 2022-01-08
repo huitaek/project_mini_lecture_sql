@@ -1,3 +1,4 @@
+import time
 from os import getcwd, listdir
 from os.path import abspath, join, isfile
 import pandas as pd
@@ -36,7 +37,7 @@ def InsertToDbWeatherData(db,fileNames):
     for i in list(filter(lambda x:x.find('weather')>=0,fileNames)):
         data = readCSVByPandas(i, 'euc-kr')
         predData = preProcessingWeatherData(data)
-        insertFromCSVFuncForMatchSQLFormat(db,'weather', consts.columns_weather_string, predData)
+        insertFromCsv(db,'weather', consts.columns_weather_string, predData)
 
     return True
 
@@ -44,31 +45,18 @@ def InsertToDbWeatherData(db,fileNames):
 def InsertToDbAccidentData(db,fileNames):
     for i in list(filter(lambda x:x.find('accident')>=0,fileNames)):
         data = readCSVByPandas(i, 'utf-8')
-        insertFromCSVFuncForMatchSQLFormat(db,'accident', consts.columns_accident_string, data)
+        insertFromCsv(db,'accident', consts.columns_accident_string, data)
 
     return True
 
 @errorLoggingDecorator
-def pandasToCsvOfAllDataByTableName(db, table):
-    res = db.executeQuery({'q':join(["select * from ", table])})
-
-    if table.find("weather") >= 0:
-        cols = consts.columns_weather
-        cols.insert(0, "weather_id")
-        df = pd.DataFrame(res, columns=cols)
-        df.to_csv(join(lib.getCurPath(), "weather.csv"), encoding="euc-kr")
-    elif table.find("accident") >= 0:
-        cols = consts.columns_accident
-        cols.insert(0, "accident_id")
-        df = pd.DataFrame(res, columns=cols)
-        df.to_csv(join(lib.getCurPath(), "accident.csv"), encoding="utf-8")
-    else:
-        df = pd.DataFrame(res)
-        df.to_csv(join(lib.getCurPath(), "else.csv"), encoding="utf-8")
-
+def makeCSVFileByTableName(db,tableName,query='select * from'):
+    res,cols = db.executeQueryHasReturn({'q':' '.join([query, tableName])})
+    df = pd.DataFrame(res,columns=cols)
+    df.to_csv('\\'.join([lib.getCurPath(),"{}.csv".format(time.time_ns())]),encoding='utf-8')
 
 @errorLoggingDecorator
-def insertFromCSVFuncForMatchSQLFormat(db, table_name, columns, dataFrame):
+def insertFromCsv(db, tableName, columns, dataFrame):
     proceed_values = []
     for i, row in dataFrame.iterrows():
         row = ["'{}'".format(j) for j in list(row)]
@@ -77,6 +65,6 @@ def insertFromCSVFuncForMatchSQLFormat(db, table_name, columns, dataFrame):
 
     proceed_values = ",".join(proceed_values)
     query = {
-        "q": "insert into {}({}) values{}".format(table_name, columns, proceed_values)
+        "q": "insert into {}({}) values{}".format(tableName, columns, proceed_values)
     }
     db.executeQueryNoReturn(query)
