@@ -31,6 +31,22 @@ def getCsvFileNames():
     names = [join(curPath, l) for l in listdir(curPath) if isfile(join(curPath, l))]
     return list(filter(lambda x: ".csv" in x, names))
 
+@errorLoggingDecorator
+def InsertToDbWeatherData(db,fileNames):
+    for i in list(filter(lambda x:x.find('weather')>=0,fileNames)):
+        data = readCSVByPandas(i, 'euc-kr')
+        predData = preProcessingWeatherData(data)
+        insertFromCSVFuncForMatchSQLFormat(db,'weather', consts.columns_weather_string, predData)
+
+    return True
+
+@errorLoggingDecorator
+def InsertToDbAccidentData(db,fileNames):
+    for i in list(filter(lambda x:x.find('accident')>=0,fileNames)):
+        data = readCSVByPandas(i, 'utf-8')
+        insertFromCSVFuncForMatchSQLFormat(db,'accident', consts.columns_accident_string, data)
+
+    return True
 
 @errorLoggingDecorator
 def pandasToCsvOfAllDataByTableName(db, table):

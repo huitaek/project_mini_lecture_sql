@@ -1,39 +1,20 @@
 import logging
 from classes import pg
-from controller.dataController import readCSVByPandas, preProcessingWeatherData
 from lib import consts, queries
 from lib.lib import errorLoggingDecorator
-from controller.dataController import getCsvFileNames,insertFromCSVFuncForMatchSQLFormat
+from controller.dataController import InsertToDbAccidentData, InsertToDbWeatherData, getCsvFileNames
 import controller.visualizationController as vc
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 @errorLoggingDecorator
-def scenarioInsertToDbWeather(db,fileNames):
-    for i in list(filter(lambda x:x.find('weather')>=0,fileNames)):
-        data = readCSVByPandas(i, 'euc-kr')
-        predData = preProcessingWeatherData(data)
-        insertFromCSVFuncForMatchSQLFormat(db,'weather', consts.columns_weather_string, predData)
-
-    return True
-
-@errorLoggingDecorator
-def scenarioInsertToDbAccident(db,fileNames):
-    for i in list(filter(lambda x:x.find('accident')>=0,fileNames)):
-        data = readCSVByPandas(i, 'utf-8')
-        insertFromCSVFuncForMatchSQLFormat(db,'accident', consts.columns_accident_string, data)
-
-    return True
-
-
-@errorLoggingDecorator
 def scenarioexecuteInsertCSVData(db, switch):
     fileNames = getCsvFileNames()
     if switch == 1: # Accident
-        scenarioInsertToDbAccident(db, fileNames)
+        InsertToDbAccidentData(db, fileNames)
     elif switch == 2: # Weather
-        scenarioInsertToDbWeather(db, fileNames)
+        InsertToDbWeatherData(db, fileNames)
     else:
         logging.warning('no matched switch number!!')
         return False
@@ -75,10 +56,10 @@ if __name__ == '__main__':
     # -- contents
     
     # ---- 도로형태(대분류)에 따른 상해 및 사망자 정보
-    vc.scenarioVisualizingRoadTypeL(db)
+    # vc.scenarioVisualizingRoadTypeL(db)
     
     # ---- 도로형태(소)에 따른 상해 및 사망자 정보
-    vc.scenarioVisualizingRoadType(db)
+    # vc.scenarioVisualizingRoadType(db)
     
     
     
