@@ -45,7 +45,7 @@ class DB:
             
         for k, v in query.items():
             self.cursor.execute(v)
-        
-        return self.cursor.fetchall()
+        columnNames = [r[0] for r in self.cursor.description]
+        return [self.cursor.fetchall(),columnNames]
     
         
