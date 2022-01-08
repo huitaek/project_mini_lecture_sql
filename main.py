@@ -1,12 +1,9 @@
 import logging
-import pandas as pd
-import numpy as np
 from classes import pg
 from controller.dataController import readCSVByPandas, preProcessingWeatherData
 from lib import consts, queries
 from lib.lib import errorLoggingDecorator
 from controller.dataController import getCsvFileNames
-from sklearn.model_selection import train_test_split
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
