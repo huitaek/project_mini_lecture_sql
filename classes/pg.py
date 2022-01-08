@@ -30,7 +30,7 @@ class DB:
         return True
 
     @errorLoggingDecorator
-    def executeQuery(self, query):
+    def executeQueryNoReturn(self, query):
         if type(query) != dict:
             logging.error('Query must be DICT !!')
             assert TypeError
@@ -38,7 +38,14 @@ class DB:
         for k, v in query.items():
             self.cursor.execute(v)
             
-        if self.cursor.rowcount == -1:
-            return True
-        else:
-            return self.cursor.fetchall()
+    def executeQueryHasReturn(self,query):
+        if type(query) != dict:
+            logging.error('Query must be DICT !!')
+            assert TypeError
+            
+        for k, v in query.items():
+            self.cursor.execute(v)
+        
+        return self.cursor.fetchall()
+    
+        

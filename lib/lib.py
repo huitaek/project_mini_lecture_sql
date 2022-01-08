@@ -1,4 +1,5 @@
 import logging
+import psycopg2 as pg2
 from datetime import datetime
 from os import getcwd, listdir
 from os.path import abspath, isfile, join
@@ -9,9 +10,9 @@ def errorLoggingDecorator(f):
         try:
             return f(*args,**kargs)
         except Exception as e:
-            logging.error('에러 발생!!!!')
             logging.error(e)
             return False
+
     return Wrapper
 
 def transToDate(date):

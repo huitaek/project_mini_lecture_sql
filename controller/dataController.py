@@ -33,8 +33,8 @@ def getCsvFileNames():
 
 
 @errorLoggingDecorator
-def executePandasToCsvOfAllDataByTableName(db, table):
-    res = db.executeQuery(join(["select * from ", table]))
+def pandasToCsvOfAllDataByTableName(db, table):
+    res = db.executeQuery({'q':join(["select * from ", table])})
 
     if table.find("weather") >= 0:
         cols = consts.columns_weather
@@ -52,7 +52,7 @@ def executePandasToCsvOfAllDataByTableName(db, table):
 
 
 @errorLoggingDecorator
-def executeInsertQueryFromCSV(db, table_name, columns, dataFrame):
+def insertFromCSVFuncForMatchSQLFormat(db, table_name, columns, dataFrame):
     proceed_values = []
     for i, row in dataFrame.iterrows():
         row = ["'{}'".format(j) for j in list(row)]
@@ -63,4 +63,4 @@ def executeInsertQueryFromCSV(db, table_name, columns, dataFrame):
     query = {
         "q": "insert into {}({}) values{}".format(table_name, columns, proceed_values)
     }
-    db.executeQuery(query)
+    db.executeQueryNoReturn(query)
