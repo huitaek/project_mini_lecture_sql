@@ -4,7 +4,7 @@ from os import getcwd
 from os.path import abspath
 import traceback
 
-def errorLoggingDecorator(f):
+def error_Logging_decorator(f):
     def Wrapper(*args,**kargs):
         try:
             return f(*args,**kargs)
@@ -14,8 +14,8 @@ def errorLoggingDecorator(f):
 
     return Wrapper
 
-@errorLoggingDecorator
-def transToDate(date):
+@error_Logging_decorator
+def trans_to_date(date):
     #### 2020-00-00 00:00 ####
 
     # year and month
@@ -29,6 +29,6 @@ def transToDate(date):
 
     return datetime(*list(map(int,[year,month,day,hour,min])))
 
-@errorLoggingDecorator
-def getCurPath():
+@error_Logging_decorator
+def get_cur_path():
     return abspath(getcwd())

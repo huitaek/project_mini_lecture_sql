@@ -1,48 +1,46 @@
 import logging
-from classes import pg
+from classes.pg import DB
+from controller.data_controller import get_csv_file_names, insert_to_db_accident_data, insert_to_db_weather_data
 from lib import consts, queries
-from lib.lib import errorLoggingDecorator
-from controller.dataController import InsertToDbAccidentData, InsertToDbWeatherData, getCsvFileNames
-import controller.visualizationController as vc
+from lib.lib import error_Logging_decorator
+import controller.visualization_controller as vc
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 #logging.basicConfig(filename='./filename.log', level=logging.ERROR)
 
-@errorLoggingDecorator
-def scenarioexecuteInsertCSVData(db, switch):
-    fileNames = getCsvFileNames()
+@error_Logging_decorator
+def scenario_execute_insert_csv_data(db:DB, switch:int):
+    fileNames = get_csv_file_names()
     if switch == 1: # Accident
-        InsertToDbAccidentData(db, fileNames)
+        insert_to_db_accident_data(db, fileNames)
     elif switch == 2: # Weather
-        InsertToDbWeatherData(db, fileNames)
+        insert_to_db_weather_data(db, fileNames)
     else:
         logging.warning('no matched switch number!!')
         return False
 
-@errorLoggingDecorator
-def scenarioSetDbTables(db):
-    # Database connection
-    
+@error_Logging_decorator
+def scenario_set_db_tables(db:DB):
     # clean Database
-    db.executeQueryNoReturn(queries.init_query)
+    db.execute_query_no_return(queries.init_query)
 
     # create Tables
-    db.executeQueryNoReturn(queries.create_tables)
+    db.execute_query_no_return(queries.create_tables)
 
     # insert Data To DB
-    scenarioexecuteInsertCSVData(db,1)  
-    scenarioexecuteInsertCSVData(db,2)  
+    scenario_execute_insert_csv_data(db,1)  
+    scenario_execute_insert_csv_data(db,2)  
 
     # insert, alter, update DB
-    db.executeQueryNoReturn(queries.accident_daynight_update)
-    db.executeQueryNoReturn(queries.involved_types_assaults_damageds_insert)
-    db.executeQueryNoReturn(queries.location)
-    db.executeQueryNoReturn(queries.casualty)
-    db.executeQueryNoReturn(queries.violation)
-    db.executeQueryNoReturn(queries.road_type_and_l)
-    db.executeQueryNoReturn(queries.acc_type)
-    db.executeQueryNoReturn(queries.extra_fk)
+    db.execute_query_no_return(queries.accident_daynight_update)
+    db.execute_query_no_return(queries.involved_types_assaults_damageds_insert)
+    db.execute_query_no_return(queries.location)
+    db.execute_query_no_return(queries.casualty)
+    db.execute_query_no_return(queries.violation)
+    db.execute_query_no_return(queries.road_type_and_l)
+    db.execute_query_no_return(queries.acc_type)
+    db.execute_query_no_return(queries.extra_fk)
     
     return db
 
@@ -50,22 +48,22 @@ def scenarioSetDbTables(db):
 
 if __name__ == '__main__':
     # set db    
-    db = pg.DB()
-    db.connectToDB(consts.dbInfo)
+    db = DB()
+    db.connect_to_db(consts.DB_INFO)
     
-    # scenarioSetDbTables(db)
+    scenario_set_db_tables(db)
     
     # Analyze and Visualizing
     # -- contents
     
     # ---- 도로형태(대분류)에 따른 상해 및 사망자 정보
-    # vc.scenarioVisualizingRoadTypeL(db)
+    vc.scenario_visualizing_Road_type_L(db)
     
     # ---- 도로형태(소)에 따른 상해 및 사망자 정보
-    # vc.scenarioVisualizingRoadType(db)
+    vc.scenario_visualizing_road_type(db)
     
     
     
     # Database Connection close
-    db.closeDBConnection()
+    db.close_db_connection()
 
