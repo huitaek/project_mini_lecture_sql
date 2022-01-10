@@ -3,8 +3,9 @@ from datetime import datetime
 from os import getcwd
 from os.path import abspath
 import traceback
+from typing import Any
 
-def error_Logging_decorator(f):
+def error_Logging_decorator(f:Any) -> Any:
     def Wrapper(*args,**kargs):
         try:
             return f(*args,**kargs)
@@ -16,7 +17,7 @@ def error_Logging_decorator(f):
 
 
 @error_Logging_decorator
-def trans_to_date(date) -> datetime:
+def trans_to_date(date:str) -> datetime:
     #### 2020-00-00 00:00 ####
 
     # year and month
@@ -28,7 +29,8 @@ def trans_to_date(date) -> datetime:
     # hour and min
     hour,min = time.split(':')
 
-    return datetime(*list(map(int,[year,month,day,hour,min])))
+    t:list[int] = list(map(int,[year,month,day,hour,min]))
+    return datetime(year=t[0],month=t[1],day=t[2],hour=t[3],minute=t[4])
 
 
 @error_Logging_decorator
