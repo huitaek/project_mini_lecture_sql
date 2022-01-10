@@ -36,6 +36,7 @@ from accident a
     
     return True
 
+
 @error_Logging_decorator
 def scenario_visualizing_road_type(db:DB) -> bool:
     res,cols = db.execute_query_has_return({'q':"""select
