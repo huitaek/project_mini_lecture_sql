@@ -12,7 +12,7 @@ font = font_manager.FontProperties(fname=font_path).get_name()
 rc('font', family=font)
 
 @error_Logging_decorator
-def scenario_visualizing_Road_type_L(db:DB):
+def scenario_visualizing_Road_type_L(db:DB) -> bool:
     res,cols = db.execute_query_has_return({'q':"""select
        rtl.road_form_l as "도로형태",
        sum(c.death) as "총 사망자 수",
@@ -33,9 +33,11 @@ from accident a
     
     df.plot(kind='bar',x='도로형태',y ='총 부상자 수')
     plt.show()
+    
+    return True
 
 @error_Logging_decorator
-def scenario_visualizing_road_type(db:DB):
+def scenario_visualizing_road_type(db:DB) -> bool:
     res,cols = db.execute_query_has_return({'q':"""select
        rt.road_form as "도로형태",
        sum(c.death) as "총 사망자 수",
@@ -56,3 +58,5 @@ from accident a
     
     df.plot(kind='bar',x='도로형태',y ='총 부상자 수')
     plt.show()
+    
+    return True

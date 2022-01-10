@@ -10,7 +10,7 @@ logger.setLevel(logging.INFO)
 #logging.basicConfig(filename='./filename.log', level=logging.ERROR)
 
 @error_Logging_decorator
-def scenario_execute_insert_csv_data(db:DB, switch:int):
+def scenario_execute_insert_csv_data(db:DB, switch:int) -> bool:
     fileNames = get_csv_file_names()
     if switch == 1: # Accident
         insert_to_db_accident_data(db, fileNames)
@@ -19,9 +19,10 @@ def scenario_execute_insert_csv_data(db:DB, switch:int):
     else:
         logging.warning('no matched switch number!!')
         return False
+    return True
 
 @error_Logging_decorator
-def scenario_set_db_tables(db:DB):
+def scenario_set_db_tables(db:DB) -> bool:
     # clean Database
     db.execute_query_no_return(queries.init_query)
 
@@ -42,7 +43,7 @@ def scenario_set_db_tables(db:DB):
     db.execute_query_no_return(queries.acc_type)
     db.execute_query_no_return(queries.extra_fk)
     
-    return db
+    return False
 
 
 

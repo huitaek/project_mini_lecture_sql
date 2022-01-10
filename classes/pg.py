@@ -10,7 +10,7 @@ class DB:
         logging.info('DB instance initialized')
 
     @error_Logging_decorator
-    def connect_to_db(self, connectionInfo):
+    def connect_to_db(self, connectionInfo) -> bool:
         if type(connectionInfo) != str:
             logging.warning('Connection Info is unavailable')
             assert Exception
@@ -23,22 +23,24 @@ class DB:
         return True
 
     @error_Logging_decorator
-    def close_db_connection(self):
+    def close_db_connection(self) -> bool:
         self._connection.close()
         logging.info('DB Connection Close SUCCESS!!')
         return True
 
     @error_Logging_decorator
-    def execute_query_no_return(self, query):
+    def execute_query_no_return(self, query) -> bool:
         if type(query) != dict:
             logging.error('Query must be DICT !!')
             assert TypeError
             
         for k, v in query.items():
             self._cursor.execute(v)
+        
+        return True
     
     @error_Logging_decorator 
-    def execute_query_has_return(self,query):
+    def execute_query_has_return(self,query) -> list:
         if type(query) != dict:
             logging.error('Query must be DICT !!')
             assert TypeError

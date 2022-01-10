@@ -15,7 +15,7 @@ def error_Logging_decorator(f):
     return Wrapper
 
 @error_Logging_decorator
-def trans_to_date(date):
+def trans_to_date(date) -> datetime:
     #### 2020-00-00 00:00 ####
 
     # year and month
@@ -30,5 +30,5 @@ def trans_to_date(date):
     return datetime(*list(map(int,[year,month,day,hour,min])))
 
 @error_Logging_decorator
-def get_cur_path():
+def get_cur_path() -> str:
     return abspath(getcwd())
