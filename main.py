@@ -21,6 +21,7 @@ def scenario_execute_insert_csv_data(db:DB, switch:int) -> bool:
         return False
     return True
 
+
 @error_Logging_decorator
 def scenario_set_db_tables(db:DB) -> bool:
     # clean Database
@@ -44,7 +45,6 @@ def scenario_set_db_tables(db:DB) -> bool:
     db.execute_query_no_return(queries.extra_fk)
     
     return False
-
 
 
 if __name__ == '__main__':
